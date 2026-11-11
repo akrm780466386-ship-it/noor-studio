@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap product-detail-page">
+  <a class="back-link" href="{{ url_for('site.shop') }}" data-ar="↙ العودة إلى المتجر" data-en="↙ Back to the shop">↙ العودة إلى المتجر</a>
+  <div class="product-detail-layout">
+    <img class="product-cover" src="{{ product['image_url'] }}" alt="{{ product['title_ar'] }}">
+    <div class="product-detail-info">
+      <p class="eyebrow" data-ar="{{ product['category_ar'] }}" data-en="{{ product['category_en'] }}">{{ product['category_ar'] }}</p>
+      <h1 data-ar="{{ product['title_ar'] }}" data-en="{{ product['title_en'] }}">{{ product['title_ar'] }}</h1>
+      <div class="product-price product-detail-price">
+        {% if product['compare_at_cents'] %}<del>{{ format_price(product['compare_at_cents'], product['currency_code']) }}</del>{% endif %}
+        <strong>{{ format_price(product['price_cents'], product['currency_code']) }}</strong>
+      </div>
+      <p class="product-description" data-ar="{{ product['description_ar'] }}" data-en="{{ product['description_en'] }}">{{ product['description_ar'] }}</p>
+      <p class="inventory-status {{ 'out-of-stock' if product['stock_quantity'] == 0 else '' }}">
+        {% if product['stock_quantity'] > 0 %}
+          <span class="status-dot"></span>
+          <span data-ar="متوفر · {{ product['stock_quantity'] }} قطعة" data-en="In stock · {{ product['stock_quantity'] }} available">متوفر · {{ product['stock_quantity'] }} قطعة</span>
+        {% else %}
+          <span class="stock-x" aria-hidden="true">×</span>
+          <span data-ar="نفد من المخزون حالياً" data-en="Currently out of stock">نفد من المخزون حالياً</span>
+        {% endif %}
+      </p>
+      {% if product['sku'] %}<p class="product-sku">SKU · {{ product['sku'] }}</p>{% endif %}
+      {% if product['stock_quantity'] > 0 %}
+      <a class="button-primary product-order-link" href="mailto:hello@noor.design?subject={{ ('Inquiry: ' ~ product['title_en'])|urlencode }}">
+        <span data-ar="استفسر عن المنتج" data-en="Enquire about this piece">استفسر عن المنتج</span><span aria-hidden="true">↙</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% endblock %}

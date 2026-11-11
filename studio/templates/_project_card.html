@@ -1,0 +1,13 @@
+<article class="project-card">
+  <a class="project-image" href="{{ url_for('site.project_detail', slug=project['slug']) }}">
+    <img src="{{ project['image_url'] }}" alt="{{ project['title_ar'] }}" loading="lazy">
+    <span class="project-index">{{ '%02d'|format(project_index) }} <i>/</i> PROJECT</span>
+  </a>
+  <div class="project-caption">
+    <div>
+      <h3><a href="{{ url_for('site.project_detail', slug=project['slug']) }}" data-ar="{{ project['title_ar'] }}" data-en="{{ project['title_en'] }}">{{ project['title_ar'] }}</a></h3>
+      <p data-ar="{{ project['category_ar'] }}" data-en="{{ project['category_en'] }}">{{ project['category_ar'] }}</p>
+    </div>
+    <a class="project-arrow" href="{{ url_for('site.project_detail', slug=project['slug']) }}" aria-label="عرض المشروع">↙</a>
+  </div>
+</article>

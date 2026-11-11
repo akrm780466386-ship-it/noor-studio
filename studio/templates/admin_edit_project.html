@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page admin-form-page">
+  <a class="back-link" href="{{ url_for('site.admin_projects') }}" data-ar="↙ العودة إلى المشاريع" data-en="↙ Back to projects">↙ العودة إلى المشاريع</a>
+  <p class="eyebrow" data-ar="إدارة المحتوى" data-en="Content management">إدارة المحتوى</p>
+  <h1 data-ar="{{ 'تعديل المشروع.' if mode == 'edit' else 'مشروع جديد.' }}" data-en="{{ 'Edit project.' if mode == 'edit' else 'New project.' }}">{{ 'تعديل المشروع.' if mode == 'edit' else 'مشروع جديد.' }}</h1>
+  <form method="post" class="form-stack project-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="form-grid">
+      <label><span data-ar="اسم المشروع — عربي" data-en="Project title — Arabic">اسم المشروع — عربي</span><input name="title_ar" value="{{ project['title_ar'] or '' }}" required maxlength="300"></label>
+      <label><span data-ar="اسم المشروع — إنجليزي" data-en="Project title — English">اسم المشروع — إنجليزي</span><input name="title_en" value="{{ project['title_en'] or '' }}" required maxlength="300"></label>
+      <label><span data-ar="الرابط المختصر (بالإنجليزية)" data-en="URL slug (English)">الرابط المختصر (بالإنجليزية)</span><input name="slug" value="{{ project['slug'] or '' }}" placeholder="my-project" pattern="[a-z0-9]+(-[a-z0-9]+)*" required maxlength="80"></label>
+      <label><span data-ar="التصنيف — عربي" data-en="Category — Arabic">التصنيف — عربي</span><input name="category_ar" value="{{ project['category_ar'] or '' }}" required maxlength="300"></label>
+      <label><span data-ar="التصنيف — إنجليزي" data-en="Category — English">التصنيف — إنجليزي</span><input name="category_en" value="{{ project['category_en'] or '' }}" required maxlength="300"></label>
+      <label class="full-span"><span data-ar="رابط صورة المشروع (HTTPS)" data-en="Project image URL (HTTPS)">رابط صورة المشروع (HTTPS)</span><input name="image_url" type="url" value="{{ project['image_url'] or '' }}" placeholder="https://images.unsplash.com/..." required maxlength="300"></label>
+      <label class="full-span"><span data-ar="نبذة — عربي" data-en="Description — Arabic">نبذة — عربي</span><textarea name="description_ar" required maxlength="2000" rows="4">{{ project['description_ar'] or '' }}</textarea></label>
+      <label class="full-span"><span data-ar="نبذة — إنجليزي" data-en="Description — English">نبذة — إنجليزي</span><textarea name="description_en" required maxlength="2000" rows="4">{{ project['description_en'] or '' }}</textarea></label>
+    </div>
+    <div class="form-actions"><button class="button-primary" type="submit"><span data-ar="حفظ المشروع" data-en="Save project">حفظ المشروع</span><span aria-hidden="true">↙</span></button><a class="underlined-link" href="{{ url_for('site.admin_projects') }}" data-ar="إلغاء" data-en="Cancel">إلغاء</a></div>
+  </form>
+</section>
+{% endblock %}

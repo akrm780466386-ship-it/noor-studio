@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11110f">
+  <meta name="description" content="NOOR — independent graphic designer and art director.">
+  <title>{{ title_ar }}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <script src="{{ url_for('static', filename='js/site.js') }}" defer></script>
+</head>
+<body data-title-ar="{{ title_ar }}" data-title-en="{{ title_en }}">
+  <div class="loader" id="loader" aria-hidden="true">
+    <div class="loader-content">
+      <img class="loader-logo" src="{{ url_for('static', filename='images/noor-mark.svg') }}" alt="">
+      <span class="loader-name">NOOR</span>
+      <span class="loader-caption" data-ar="استوديو التصميم الإبداعي" data-en="Independent creative practice">استوديو التصميم الإبداعي</span>
+      <span class="loader-track"><span></span></span>
+    </div>
+  </div>
+  <header class="site-header wrap">
+    <a class="brand" href="{{ url_for('site.home') }}" aria-label="NOOR">
+      <img src="{{ url_for('static', filename='images/noor-mark.svg') }}" alt="">
+      <span>NOOR</span>
+    </a>
+    <nav class="main-nav" aria-label="التنقل الرئيسي">
+      <a class="{{ 'is-active' if page == 'work' else '' }}" href="{{ url_for('site.work') }}" data-ar="الأعمال" data-en="Work">الأعمال</a>
+      <a class="{{ 'is-active' if page == 'shop' else '' }}" href="{{ url_for('site.shop') }}" data-ar="المتجر" data-en="Shop">المتجر</a>
+      <a class="{{ 'is-active' if page == 'about' else '' }}" href="{{ url_for('site.about') }}" data-ar="من أنا" data-en="About">من أنا</a>
+      <a class="{{ 'is-active' if page == 'services' else '' }}" href="{{ url_for('site.services') }}" data-ar="الخدمات" data-en="Services">الخدمات</a>
+      <a class="{{ 'is-active' if page == 'contact' else '' }}" href="{{ url_for('site.contact') }}" data-ar="تواصل" data-en="Contact">تواصل</a>
+    </nav>
+    <div class="header-actions">
+      <button class="icon-button language-button" id="languageToggle" type="button" aria-label="Switch to English">EN</button>
+      <button class="icon-button theme-button" id="themeToggle" type="button" aria-label="التبديل إلى الوضع الفاتح"><span id="themeIcon" aria-hidden="true">☼</span></button>
+      <a class="admin-shortcut" href="{{ url_for('site.admin_dashboard') }}" data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</a>
+    </div>
+  </header>
+  {% if session.get('admin') %}
+  <nav class="admin-nav wrap" aria-label="إدارة المتجر">
+    <span class="admin-nav-caption"><a href="{{ url_for('site.admin_dashboard') }}" data-ar="لوحة التحكم" data-en="Dashboard">لوحة التحكم</a></span>
+    <a href="{{ url_for('site.admin_projects') }}" data-ar="الأعمال" data-en="Portfolio">الأعمال</a>
+    <a href="{{ url_for('site.admin_products') }}" data-ar="المنتجات" data-en="Products">المنتجات</a>
+    <a href="{{ url_for('site.admin_settings') }}" data-ar="الحساب وكلمة المرور" data-en="Account & password">الحساب وكلمة المرور</a>
+    <form method="post" action="{{ url_for('site.admin_logout') }}">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <button class="admin-nav-logout" type="submit" data-ar="تسجيل الخروج" data-en="Sign out">تسجيل الخروج</button>
+    </form>
+  </nav>
+  {% endif %}
+
+  {% with notices = get_flashed_messages(with_categories=true) %}
+    {% if notices %}
+    <div class="flash-stack wrap" role="status">
+      {% for category, message in notices %}<p class="flash flash-{{ category }}"><span data-ar="{{ message.ar }}" data-en="{{ message.en }}">{{ message.ar }}</span></p>{% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="site-footer wrap">
+    <a class="footer-brand" href="{{ url_for('site.home') }}">NOOR®</a>
+    <span>© 2026 NOOR STUDIO · <span data-ar="صُنع بشغف" data-en="Made with intention">صُنع بشغف</span></span>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">INSTAGRAM</a>
+      <a href="https://www.behance.net/" target="_blank" rel="noreferrer">BEHANCE</a>
+      <a href="{{ url_for('site.admin_login') }}" data-ar="دخول الإدارة" data-en="Admin">دخول الإدارة</a>
+    </div>
+  </footer>
+</body>
+</html>

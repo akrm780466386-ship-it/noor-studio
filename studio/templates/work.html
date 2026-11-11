@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap page-intro">
+  <p class="eyebrow" data-ar="مختارات من أعمالي" data-en="A selection of my work">مختارات من أعمالي</p>
+  <h1 data-ar="أعمال تتحدث." data-en="Work that speaks.">أعمال تتحدث.</h1>
+  <p class="section-copy" data-ar="هويات وتجارب صُنعت بفضول، عناية، واهتمام بكل تفصيل." data-en="Identities and experiences shaped with curiosity, care, and attention to every detail.">هويات وتجارب صُنعت بفضول، عناية، واهتمام بكل تفصيل.</p>
+</section>
+<section class="wrap section-block">
+  {% if projects %}
+  <div class="project-grid project-grid-wide">{% for project in projects %}{% with project_index=loop.index %}{% include "_project_card.html" %}{% endwith %}{% endfor %}</div>
+  {% else %}
+  <p class="empty-state" data-ar="ستظهر المشاريع هنا قريباً." data-en="Projects will appear here soon.">ستظهر المشاريع هنا قريباً.</p>
+  {% endif %}
+</section>
+{% endblock %}

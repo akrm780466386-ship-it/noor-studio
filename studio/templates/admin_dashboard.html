@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page dashboard-page">
+  <div class="admin-heading">
+    <div>
+      <p class="eyebrow" data-ar="مرحباً {{ session.get('admin') }} · إدارة الاستوديو" data-en="Welcome {{ session.get('admin') }} · Studio admin">مرحباً {{ session.get('admin') }} · إدارة الاستوديو</p>
+      <h1 data-ar="لوحة التحكم." data-en="Dashboard.">لوحة التحكم.</h1>
+    </div>
+    <a class="button-primary" href="{{ url_for('site.admin_new_product') }}"><span data-ar="إضافة منتج" data-en="Add product">إضافة منتج</span><span aria-hidden="true">＋</span></a>
+  </div>
+  <div class="dashboard-stats">
+    <a class="dashboard-stat" href="{{ url_for('site.admin_products') }}"><span data-ar="إجمالي المنتجات" data-en="Total products">إجمالي المنتجات</span><strong>{{ product_count }}</strong></a>
+    <a class="dashboard-stat" href="{{ url_for('site.admin_products') }}"><span data-ar="معروض في المتجر" data-en="Published in store">معروض في المتجر</span><strong>{{ published_count }}</strong></a>
+    <a class="dashboard-stat {{ 'stat-warning' if low_stock_count else '' }}" href="{{ url_for('site.admin_products') }}"><span data-ar="مخزون منخفض · أقل من ٥" data-en="Low stock · under 5">مخزون منخفض · أقل من ٥</span><strong>{{ low_stock_count }}</strong></a>
+    <a class="dashboard-stat" href="{{ url_for('site.admin_projects') }}"><span data-ar="مشاريع معرض الأعمال" data-en="Portfolio projects">مشاريع معرض الأعمال</span><strong>{{ project_count }}</strong></a>
+  </div>
+  <div class="dashboard-actions">
+    <a class="dashboard-action" href="{{ url_for('site.admin_products') }}"><span class="dashboard-action-index">01</span><span><strong data-ar="إدارة المنتجات" data-en="Manage products">إدارة المنتجات</strong><small data-ar="إضافة وتعديل الأسعار والمخزون وحالة النشر" data-en="Add products and manage pricing, inventory, and visibility">إضافة وتعديل الأسعار والمخزون وحالة النشر</small></span><b>↙</b></a>
+    <a class="dashboard-action" href="{{ url_for('site.admin_projects') }}"><span class="dashboard-action-index">02</span><span><strong data-ar="إدارة معرض الأعمال" data-en="Manage portfolio">إدارة معرض الأعمال</strong><small data-ar="تحديث المشاريع والهوية وعرض الأعمال" data-en="Update projects and curate your portfolio">تحديث المشاريع والهوية وعرض الأعمال</small></span><b>↙</b></a>
+    <a class="dashboard-action" href="{{ url_for('site.admin_settings') }}"><span class="dashboard-action-index">03</span><span><strong data-ar="الحساب وكلمة المرور" data-en="Account and password">الحساب وكلمة المرور</strong><small data-ar="تحديث بيانات دخول لوحة الإدارة" data-en="Update your dashboard sign-in password">تحديث بيانات دخول لوحة الإدارة</small></span><b>↙</b></a>
+  </div>
+</section>
+{% endblock %}

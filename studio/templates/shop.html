@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap page-intro">
+  <p class="eyebrow" data-ar="اختيارات استوديو نور" data-en="The NOOR edit">اختيارات استوديو نور</p>
+  <h1 data-ar="المتجر." data-en="The shop.">المتجر.</h1>
+  <p class="section-copy" data-ar="قطع واختيارات صُمّمت بعناية. تصفّح المجموعة وتعرّف على تفاصيل كل منتج." data-en="Objects and considered selections. Browse the collection and explore every detail.">قطع واختيارات صُمّمت بعناية. تصفّح المجموعة وتعرّف على تفاصيل كل منتج.</p>
+</section>
+<section class="wrap shop-section">
+  {% if products %}
+  <div class="project-grid store-grid">
+    {% for product in products %}
+    <article class="project-card store-card">
+      <a class="project-image store-image" href="{{ url_for('site.product_detail', slug=product['slug']) }}">
+        <img src="{{ product['image_url'] }}" alt="{{ product['title_ar'] }}" loading="lazy">
+        {% if product['stock_quantity'] == 0 %}<span class="product-badge" data-ar="نفد من المخزون" data-en="Sold out">نفد من المخزون</span>{% endif %}
+      </a>
+      <div class="project-caption">
+        <div>
+          <p class="product-category" data-ar="{{ product['category_ar'] }}" data-en="{{ product['category_en'] }}">{{ product['category_ar'] }}</p>
+          <h3><a href="{{ url_for('site.product_detail', slug=product['slug']) }}" data-ar="{{ product['title_ar'] }}" data-en="{{ product['title_en'] }}">{{ product['title_ar'] }}</a></h3>
+          <div class="product-price">
+            {% if product['compare_at_cents'] %}<del>{{ format_price(product['compare_at_cents'], product['currency_code']) }}</del>{% endif %}
+            <strong>{{ format_price(product['price_cents'], product['currency_code']) }}</strong>
+          </div>
+        </div>
+        <a class="project-arrow" href="{{ url_for('site.product_detail', slug=product['slug']) }}" aria-label="عرض المنتج">↙</a>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-store">
+    <span class="eyebrow" data-ar="قريباً" data-en="Coming soon">قريباً</span>
+    <h2 data-ar="نعمل على تجهيز اختيارات المتجر." data-en="We're preparing the store collection.">نعمل على تجهيز اختيارات المتجر.</h2>
+    <p class="section-copy" data-ar="تعود المنتجات إلى الظهور هنا فور نشرها من لوحة التحكم." data-en="Published products will appear here as soon as they're added in the dashboard.">تعود المنتجات إلى الظهور هنا فور نشرها من لوحة التحكم.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

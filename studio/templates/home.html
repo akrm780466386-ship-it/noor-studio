@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap hero">
+  <div class="hero-copy">
+    <p class="eyebrow" data-ar="مصممة جرافيك · مديرة فنية" data-en="Graphic designer · Art director">مصممة جرافيك · مديرة فنية</p>
+    <h1><span data-ar="أصنع أفكاراً" data-en="I make ideas">أصنع أفكاراً</span><br><span data-ar="تترك أثراً." data-en="that leave a mark.">تترك أثراً.</span></h1>
+    <p class="hero-description" data-ar="أحوّل الأفكار الجريئة إلى هويات بصرية وتجارب رقمية تعبّر عن العلامات التجارية بوضوح وشخصية لا تُنسى." data-en="I turn bold ideas into visual identities and digital experiences that give brands clarity, character, and a lasting impression.">أحوّل الأفكار الجريئة إلى هويات بصرية وتجارب رقمية تعبّر عن العلامات التجارية بوضوح وشخصية لا تُنسى.</p>
+    <div class="hero-actions">
+      <a class="button-primary" href="{{ url_for('site.work') }}"><span data-ar="استكشف أعمالي" data-en="Explore my work">استكشف أعمالي</span><span aria-hidden="true">↙</span></a>
+      <a class="underlined-link" href="{{ url_for('site.about') }}" data-ar="تعرف عليّ" data-en="Get to know me">تعرف عليّ</a>
+    </div>
+    <p class="availability"><span class="status-dot"></span><span data-ar="متاحة لمشاريع مختارة · ٢٠٢٦" data-en="Available for select projects · 2026">متاحة لمشاريع مختارة · ٢٠٢٦</span></p>
+  </div>
+  <div class="hero-visual">
+    <img class="hero-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="صورة إبداعية لمصممة" fetchpriority="high">
+    <span class="hero-outline"></span>
+    <span class="vertical-label">CREATIVE PRACTICE — 01</span>
+    <span class="image-stamp" data-ar="تصميم بفكرة، وشعور." data-en="Design with thought & feeling.">تصميم بفكرة، وشعور.</span>
+  </div>
+</section>
+
+<section class="section-block section-muted">
+  <div class="wrap">
+    <div class="section-heading">
+      <div><p class="eyebrow" data-ar="مختارات من أعمالي · ٠١—٠٣" data-en="Selected work · 01—03">مختارات من أعمالي · ٠١—٠٣</p><h2 data-ar="أعمال تتحدث." data-en="Work that speaks.">أعمال تتحدث.</h2></div>
+      <a class="underlined-link" href="{{ url_for('site.work') }}" data-ar="جميع الأعمال ↙" data-en="All projects ↙">جميع الأعمال ↙</a>
+    </div>
+    <div class="project-grid">
+      {% for project in projects %}{% with project_index=loop.index %}{% include "_project_card.html" %}{% endwith %}{% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="wrap home-about">
+  <div><p class="eyebrow" data-ar="فكرة تتحول إلى أثر" data-en="Ideas into impact">فكرة تتحول إلى أثر</p><h2 data-ar="التصميم ليس كيف يبدو، بل ما يجعلك تشعر به." data-en="Design is not just how it looks, but how it makes you feel.">التصميم ليس كيف يبدو، بل ما يجعلك تشعر به.</h2></div>
+  <div><p class="section-copy" data-ar="أؤمن بأن كل علامة تستحق قصة بصرية أصيلة. من أول سؤال حتى آخر تفصيل، أعمل لأصنع حلولاً واضحة، صادقة، وتستحق أن تبقى." data-en="Every brand deserves an authentic visual story. From the first question to the final detail, I create thoughtful work made to last.">أؤمن بأن كل علامة تستحق قصة بصرية أصيلة. من أول سؤال حتى آخر تفصيل، أعمل لأصنع حلولاً واضحة، صادقة، وتستحق أن تبقى.</p><a class="underlined-link" href="{{ url_for('site.about') }}" data-ar="المزيد عنّي ↙" data-en="More about me ↙">المزيد عنّي ↙</a></div>
+</section>
+
+<section class="wrap contact-banner">
+  <div><p class="eyebrow" data-ar="لديك فكرة؟" data-en="Have an idea?">لديك فكرة؟</p><h2 data-ar="لنصنع شيئاً جميلاً معاً." data-en="Let's make something beautiful together.">لنصنع شيئاً جميلاً معاً.</h2></div>
+  <a class="button-primary" href="{{ url_for('site.contact') }}"><span data-ar="ابدأ مشروعك" data-en="Start a project">ابدأ مشروعك</span><span aria-hidden="true">↙</span></a>
+</section>
+{% endblock %}

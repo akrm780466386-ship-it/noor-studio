@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page admin-form-page">
+  <a class="back-link" href="{{ url_for('site.admin_products') }}" data-ar="↙ العودة إلى المنتجات" data-en="↙ Back to products">↙ العودة إلى المنتجات</a>
+  <p class="eyebrow" data-ar="كتالوج المتجر" data-en="Store catalogue">كتالوج المتجر</p>
+  <h1 data-ar="{{ 'تعديل المنتج.' if mode == 'edit' else 'منتج جديد.' }}" data-en="{{ 'Edit product.' if mode == 'edit' else 'New product.' }}">{{ 'تعديل المنتج.' if mode == 'edit' else 'منتج جديد.' }}</h1>
+  <p class="section-copy" data-ar="أدخل معلومات المنتج والسعر والكمية المتاحة. المنتج غير المنشور يبقى محفوظاً في لوحة الإدارة فقط." data-en="Add the product details, pricing, and available stock. Unpublished products are saved in your dashboard only.">أدخل معلومات المنتج والسعر والكمية المتاحة. المنتج غير المنشور يبقى محفوظاً في لوحة الإدارة فقط.</p>
+  <form method="post" class="form-stack project-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="form-grid">
+      <label><span data-ar="اسم المنتج — عربي" data-en="Product name — Arabic">اسم المنتج — عربي</span><input name="title_ar" value="{{ product['title_ar'] or '' }}" required maxlength="180"></label>
+      <label><span data-ar="اسم المنتج — إنجليزي" data-en="Product name — English">اسم المنتج — إنجليزي</span><input name="title_en" value="{{ product['title_en'] or '' }}" required maxlength="180"></label>
+      <label><span data-ar="الرابط المختصر (إنجليزي)" data-en="Product URL slug">الرابط المختصر (إنجليزي)</span><input name="slug" value="{{ product['slug'] or '' }}" placeholder="linen-notebook" pattern="[a-z0-9]+(-[a-z0-9]+)*" required maxlength="80"></label>
+      <label><span data-ar="رمز المنتج SKU (اختياري)" data-en="SKU (optional)">رمز المنتج SKU (اختياري)</span><input name="sku" value="{{ product['sku'] or '' }}" placeholder="NOOR-001" maxlength="60"></label>
+      <label><span data-ar="التصنيف — عربي" data-en="Category — Arabic">التصنيف — عربي</span><input name="category_ar" value="{{ product['category_ar'] or '' }}" required maxlength="120"></label>
+      <label><span data-ar="التصنيف — إنجليزي" data-en="Category — English">التصنيف — إنجليزي</span><input name="category_en" value="{{ product['category_en'] or '' }}" required maxlength="120"></label>
+      <label><span data-ar="السعر" data-en="Price">السعر</span><input name="price" type="number" min="0.01" max="999999.99" step="0.01" value="{{ product['price'] if product['price'] is defined else ('%.2f'|format(product['price_cents'] / 100) if product['price_cents'] else '') }}" required></label>
+      <label><span data-ar="العملة" data-en="Currency">العملة</span><select name="currency_code" required><option value="USD" {{ 'selected' if product['currency_code']|default('USD') == 'USD' else '' }} data-ar="USD — دولار" data-en="USD — Dollar">USD — دولار</option><option value="SAR" {{ 'selected' if product['currency_code']|default('USD') == 'SAR' else '' }} data-ar="SAR — ريال سعودي" data-en="SAR — Saudi Riyal">SAR — ريال سعودي</option><option value="AED" {{ 'selected' if product['currency_code']|default('USD') == 'AED' else '' }} data-ar="AED — درهم إماراتي" data-en="AED — UAE Dirham">AED — درهم إماراتي</option><option value="EGP" {{ 'selected' if product['currency_code']|default('USD') == 'EGP' else '' }} data-ar="EGP — جنيه مصري" data-en="EGP — Egyptian Pound">EGP — جنيه مصري</option></select></label>
+      <label><span data-ar="السعر قبل التخفيض (اختياري)" data-en="Compare-at price (optional)">السعر قبل التخفيض (اختياري)</span><input name="compare_at_price" type="number" min="0.01" max="999999.99" step="0.01" value="{{ product['compare_at_price'] if product['compare_at_price'] is defined else ('%.2f'|format(product['compare_at_cents'] / 100) if product['compare_at_cents'] else '') }}"></label>
+      <label><span data-ar="الكمية المتاحة بالمخزون" data-en="Available inventory">الكمية المتاحة بالمخزون</span><input name="stock_quantity" type="number" min="0" max="1000000" step="1" value="{{ product['stock_quantity']|default(0) }}" required></label>
+      <label><span data-ar="حالة المنتج" data-en="Product visibility">حالة المنتج</span><select name="is_published" required><option value="1" {{ 'selected' if product['is_published']|default(1)|int == 1 else '' }} data-ar="منشور — يظهر في المتجر" data-en="Published — visible in store">منشور — يظهر في المتجر</option><option value="0" {{ 'selected' if product['is_published']|default(1)|int == 0 else '' }} data-ar="مسودة — لوحة الإدارة فقط" data-en="Draft — dashboard only">مسودة — لوحة الإدارة فقط</option></select></label>
+      <label class="full-span"><span data-ar="رابط صورة المنتج (HTTPS)" data-en="Product image URL (HTTPS)">رابط صورة المنتج (HTTPS)</span><input name="image_url" type="url" value="{{ product['image_url'] or '' }}" placeholder="https://images.unsplash.com/..." required maxlength="300"></label>
+      <label class="full-span"><span data-ar="وصف المنتج — عربي" data-en="Product description — Arabic">وصف المنتج — عربي</span><textarea name="description_ar" required maxlength="2000" rows="4">{{ product['description_ar'] or '' }}</textarea></label>
+      <label class="full-span"><span data-ar="وصف المنتج — إنجليزي" data-en="Product description — English">وصف المنتج — إنجليزي</span><textarea name="description_en" required maxlength="2000" rows="4">{{ product['description_en'] or '' }}</textarea></label>
+    </div>
+    <div class="form-actions"><button class="button-primary" type="submit"><span data-ar="حفظ المنتج" data-en="Save product">حفظ المنتج</span><span aria-hidden="true">↙</span></button><a class="underlined-link" href="{{ url_for('site.admin_products') }}" data-ar="إلغاء" data-en="Cancel">إلغاء</a></div>
+  </form>
+</section>
+{% endblock %}

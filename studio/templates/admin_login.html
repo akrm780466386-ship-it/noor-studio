@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="admin-auth">
+  <div class="admin-auth-card">
+    <img class="auth-logo" src="{{ url_for('static', filename='images/noor-mark.svg') }}" alt="">
+    <p class="eyebrow" data-ar="منطقة خاصة" data-en="Private area">منطقة خاصة</p>
+    <h1 data-ar="دخول الإدارة." data-en="Studio access.">دخول الإدارة.</h1>
+    <p class="section-copy" data-ar="هذه المساحة مخصصة لإدارة مشاريع الاستوديو." data-en="This area is for managing studio projects.">هذه المساحة مخصصة لإدارة مشاريع الاستوديو.</p>
+    <form method="post" class="form-stack">
+      <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+      <label><span data-ar="اسم المستخدم" data-en="Username">اسم المستخدم</span><input name="username" autocomplete="username" required maxlength="80"></label>
+      <label><span data-ar="كلمة المرور" data-en="Password">كلمة المرور</span><input name="password" type="password" autocomplete="current-password" required maxlength="1024"></label>
+      <button class="button-primary" type="submit"><span data-ar="تسجيل الدخول" data-en="Sign in">تسجيل الدخول</span><span aria-hidden="true">↙</span></button>
+    </form>
+    <a class="underlined-link" href="{{ url_for('site.home') }}" data-ar="العودة إلى الموقع" data-en="Back to the website">العودة إلى الموقع</a>
+  </div>
+</section>
+{% endblock %}

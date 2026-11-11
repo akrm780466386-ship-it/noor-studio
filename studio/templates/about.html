@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap page-intro about-intro">
+  <p class="eyebrow" data-ar="قليل عنّي" data-en="A little about me">قليل عنّي</p>
+  <h1><span data-ar="أصمم بهدوء،" data-en="Thoughtful by nature,">أصمم بهدوء،</span><br><span data-ar="وأفكر بجرأة." data-en="bold by design.">وأفكر بجرأة.</span></h1>
+  <p class="section-copy" data-ar="أنا نور، مصممة مستقلة أؤمن بأن أفضل الحلول تبدأ بالإنصات. أعمل مع أشخاص وعلامات طموحة لأصنع لغة بصرية متماسكة، من الفكرة الأولى حتى آخر تفصيل." data-en="I'm Noor, an independent designer who believes the best solutions begin with listening. I partner with ambitious people and brands to build thoughtful visual languages, from the first idea to the final detail.">أنا نور، مصممة مستقلة أؤمن بأن أفضل الحلول تبدأ بالإنصات. أعمل مع أشخاص وعلامات طموحة لأصنع لغة بصرية متماسكة، من الفكرة الأولى حتى آخر تفصيل.</p>
+</section>
+<section class="wrap about-values">
+  <div class="value-card"><span>01</span><h2 data-ar="فكرة قبل الشكل" data-en="Meaning before form">فكرة قبل الشكل</h2><p data-ar="كل قرار بصري يخدم هدفاً واضحاً ويقرب العلامة من جمهورها." data-en="Every visual decision serves a purpose and brings the brand closer to its audience.">كل قرار بصري يخدم هدفاً واضحاً ويقرب العلامة من جمهورها.</p></div>
+  <div class="value-card"><span>02</span><h2 data-ar="تفاصيل تصنع الفرق" data-en="Details make the difference">تفاصيل تصنع الفرق</h2><p data-ar="التوازن بين الجرأة والبساطة يجعل التجربة متكاملة ولا تُنسى." data-en="Balancing boldness with simplicity makes an experience feel considered and memorable.">التوازن بين الجرأة والبساطة يجعل التجربة متكاملة ولا تُنسى.</p></div>
+  <div class="value-card"><span>03</span><h2 data-ar="شراكة حقيقية" data-en="A real partnership">شراكة حقيقية</h2><p data-ar="أفضل النتائج تأتي من الحوار والثقة والعمل يداً بيد." data-en="The best work comes from conversation, trust, and working side by side.">أفضل النتائج تأتي من الحوار والثقة والعمل يداً بيد.</p></div>
+</section>
+<section class="wrap about-cta"><p data-ar="هل نبدأ حكاية جديدة؟" data-en="Shall we start a new story?">هل نبدأ حكاية جديدة؟</p><a class="button-primary" href="{{ url_for('site.contact') }}"><span data-ar="تواصل معي" data-en="Get in touch">تواصل معي</span><span aria-hidden="true">↙</span></a></section>
+{% endblock %}

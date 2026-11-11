@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page">
+  <div class="admin-heading">
+    <div>
+      <p class="eyebrow" data-ar="إدارة المتجر" data-en="Store management">إدارة المتجر</p>
+      <h1 data-ar="المنتجات." data-en="Products.">المنتجات.</h1>
+    </div>
+    <a class="button-primary" href="{{ url_for('site.admin_new_product') }}"><span data-ar="إضافة منتج" data-en="Add product">إضافة منتج</span><span aria-hidden="true">＋</span></a>
+  </div>
+  <div class="admin-toolbar">
+    <span data-ar="إجمالي المنتجات:" data-en="Total products:">إجمالي المنتجات:</span> <strong>{{ products|length }}</strong>
+    <a class="text-button" href="{{ url_for('site.admin_projects') }}" data-ar="إدارة الأعمال" data-en="Manage portfolio">إدارة الأعمال</a>
+    <a class="text-button" href="{{ url_for('site.admin_settings') }}" data-ar="كلمة المرور" data-en="Password">كلمة المرور</a>
+    <a class="text-button" href="{{ url_for('site.shop') }}" data-ar="عرض المتجر ↙" data-en="View store ↙">عرض المتجر ↙</a>
+  </div>
+  <div class="admin-project-list">
+    {% for product in products %}
+    <article class="admin-project admin-product">
+      <img src="{{ product['image_url'] }}" alt="" loading="lazy">
+      <div class="admin-project-title">
+        <strong>{{ product['title_ar'] }}</strong>
+        <span>{{ product['sku'] or product['slug'] }} · {{ format_price(product['price_cents'], product['currency_code']) }} · {% if product['stock_quantity'] == 0 %}نفد المخزون{% else %}المخزون {{ product['stock_quantity'] }}{% endif %}</span>
+      </div>
+      <span class="publish-state {{ 'is-unpublished' if not product['is_published'] else '' }}" data-ar="{{ 'منشور' if product['is_published'] else 'مسودة' }}" data-en="{{ 'Published' if product['is_published'] else 'Draft' }}">{{ 'منشور' if product['is_published'] else 'مسودة' }}</span>
+      <div class="admin-project-actions">
+        {% if product['is_published'] %}<a class="small-action" href="{{ url_for('site.product_detail', slug=product['slug']) }}" data-ar="عرض" data-en="View">عرض</a>{% endif %}
+        <a class="small-action" href="{{ url_for('site.admin_edit_product', product_id=product['id']) }}" data-ar="تعديل" data-en="Edit">تعديل</a>
+        <form method="post" action="{{ url_for('site.admin_delete_product', product_id=product['id']) }}" data-confirm-ar="هل تريد حذف هذا المنتج نهائياً؟" data-confirm-en="Permanently delete this product?">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button class="small-action danger-action" type="submit" data-ar="حذف" data-en="Delete">حذف</button>
+        </form>
+      </div>
+    </article>
+    {% else %}
+    <p class="empty-state" data-ar="لا توجد منتجات بعد. أضف أول منتج لتبدأ مجموعتك." data-en="There are no products yet. Add the first item to start your collection.">لا توجد منتجات بعد. أضف أول منتج لتبدأ مجموعتك.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

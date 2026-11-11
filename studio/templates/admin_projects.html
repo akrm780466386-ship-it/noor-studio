@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page">
+  <div class="admin-heading">
+    <div><p class="eyebrow" data-ar="إدارة الاستوديو" data-en="Studio management">إدارة الاستوديو</p><h1 data-ar="المشاريع." data-en="Projects.">المشاريع.</h1></div>
+    <a class="button-primary" href="{{ url_for('site.admin_new_project') }}"><span data-ar="إضافة مشروع" data-en="Add project">إضافة مشروع</span><span aria-hidden="true">＋</span></a>
+  </div>
+  <div class="admin-toolbar">
+    <span data-ar="مشاريع معرض الأعمال" data-en="Portfolio projects">مشاريع معرض الأعمال</span>
+    <a class="text-button" href="{{ url_for('site.admin_dashboard') }}" data-ar="العودة للوحة التحكم" data-en="Back to dashboard">العودة للوحة التحكم</a>
+  </div>
+  <div class="admin-project-list">
+    {% for project in projects %}
+    <article class="admin-project">
+      <img src="{{ project['image_url'] }}" alt="" loading="lazy">
+      <div class="admin-project-title"><strong>{{ project['title_ar'] }}</strong><span>{{ project['slug'] }}</span></div>
+      <div class="admin-project-actions">
+        <a class="small-action" href="{{ url_for('site.project_detail', slug=project['slug']) }}" data-ar="عرض" data-en="View">عرض</a>
+        <a class="small-action" href="{{ url_for('site.admin_edit_project', project_id=project['id']) }}" data-ar="تعديل" data-en="Edit">تعديل</a>
+        <form method="post" action="{{ url_for('site.admin_delete_project', project_id=project['id']) }}" data-confirm-ar="هل تريد حذف هذا المشروع؟" data-confirm-en="Delete this project?">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <button class="small-action danger-action" type="submit" data-ar="حذف" data-en="Delete">حذف</button>
+        </form>
+      </div>
+    </article>
+    {% else %}
+    <p class="empty-state" data-ar="لا توجد مشاريع بعد." data-en="No projects yet.">لا توجد مشاريع بعد.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

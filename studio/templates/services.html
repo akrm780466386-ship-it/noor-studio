@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap page-intro">
+  <p class="eyebrow" data-ar="ما الذي أقدمه" data-en="What I do">ما الذي أقدمه</p>
+  <h1><span data-ar="من الفكرة" data-en="From first thought">من الفكرة</span><br><span data-ar="إلى الانطباع." data-en="to lasting impression.">إلى الانطباع.</span></h1>
+  <p class="section-copy" data-ar="خدمات إبداعية مترابطة تساعد علامتك على الظهور بصوتها الخاص، أينما التقى الناس بها." data-en="Connected creative services that help your brand show up with its own voice, wherever people meet it.">خدمات إبداعية مترابطة تساعد علامتك على الظهور بصوتها الخاص، أينما التقى الناس بها.</p>
+</section>
+<section class="wrap service-list">
+  <article class="service-row"><span>01</span><div><h2 data-ar="استراتيجية العلامة" data-en="Brand strategy">استراتيجية العلامة</h2><p data-ar="بحث، تموضع، ورسم ملامح قصة علامتك قبل أن نبدأ بالتصميم." data-en="Research, positioning, and defining your brand story before design begins.">بحث، تموضع، ورسم ملامح قصة علامتك قبل أن نبدأ بالتصميم.</p></div><b>↙</b></article>
+  <article class="service-row"><span>02</span><div><h2 data-ar="الهوية البصرية" data-en="Visual identity">الهوية البصرية</h2><p data-ar="شعار، ألوان، خطوط، وعناصر مرئية تشكل نظاماً متكاملاً." data-en="Logo, color, typography, and visual elements brought together as one system.">شعار، ألوان، خطوط، وعناصر مرئية تشكل نظاماً متكاملاً.</p></div><b>↙</b></article>
+  <article class="service-row"><span>03</span><div><h2 data-ar="التغليف والمطبوعات" data-en="Packaging & print">التغليف والمطبوعات</h2><p data-ar="تصميم مادي يحول لحظة التفاعل مع علامتك إلى تجربة محسوسة." data-en="Tactile design that turns an encounter with your brand into an experience.">تصميم مادي يحول لحظة التفاعل مع علامتك إلى تجربة محسوسة.</p></div><b>↙</b></article>
+  <article class="service-row"><span>04</span><div><h2 data-ar="الحملات الإبداعية" data-en="Creative campaigns">الحملات الإبداعية</h2><p data-ar="فكرة متماسكة وتطبيقات مرنة تنقل رسالتك عبر القنوات المختلفة." data-en="One strong idea and flexible executions that carry your message across channels.">فكرة متماسكة وتطبيقات مرنة تنقل رسالتك عبر القنوات المختلفة.</p></div><b>↙</b></article>
+</section>
+<section class="wrap about-cta"><p data-ar="لنتحدث عن احتياج مشروعك." data-en="Let's talk about what your project needs.">لنتحدث عن احتياج مشروعك.</p><a class="button-primary" href="{{ url_for('site.contact') }}"><span data-ar="اطلب عرضاً" data-en="Request a proposal">اطلب عرضاً</span><span aria-hidden="true">↙</span></a></section>
+{% endblock %}

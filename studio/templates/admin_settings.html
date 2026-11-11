@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="wrap admin-page account-settings">
+  <p class="eyebrow" data-ar="حساب الاستوديو" data-en="Studio account">حساب الاستوديو</p>
+  <h1 data-ar="تغيير كلمة المرور." data-en="Change password.">تغيير كلمة المرور.</h1>
+  <p class="section-copy" data-ar="المستخدم الحالي: {{ session.get('admin') }}. اختر كلمة مرور جديدة طويلة وفريدة لا تستخدمها في حساب آخر." data-en="Signed in as {{ session.get('admin') }}. Choose a long, unique password that you don't reuse elsewhere.">المستخدم الحالي: {{ session.get('admin') }}. اختر كلمة مرور جديدة طويلة وفريدة لا تستخدمها في حساب آخر.</p>
+  <form method="post" action="{{ url_for('site.admin_change_password') }}" class="form-stack password-form">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <label><span data-ar="كلمة المرور الحالية" data-en="Current password">كلمة المرور الحالية</span><input name="current_password" type="password" autocomplete="current-password" required maxlength="1024"></label>
+    <label><span data-ar="كلمة المرور الجديدة — 14 حرفاً على الأقل" data-en="New password — at least 14 characters">كلمة المرور الجديدة — 14 حرفاً على الأقل</span><input name="new_password" type="password" autocomplete="new-password" minlength="14" required maxlength="1024"></label>
+    <label><span data-ar="تأكيد كلمة المرور الجديدة" data-en="Confirm new password">تأكيد كلمة المرور الجديدة</span><input name="confirm_password" type="password" autocomplete="new-password" minlength="14" required maxlength="1024"></label>
+    <button class="button-primary" type="submit"><span data-ar="حفظ كلمة المرور" data-en="Update password">حفظ كلمة المرور</span><span aria-hidden="true">↙</span></button>
+  </form>
+  <a class="underlined-link settings-back" href="{{ url_for('site.admin_products') }}" data-ar="العودة إلى المنتجات" data-en="Back to products">العودة إلى المنتجات</a>
+</section>
+{% endblock %}
