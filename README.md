@@ -1,6 +1,6 @@
-# NOOR Studio
+# AKRAM DESIGN
 
-A bilingual Arabic/English portfolio with separate pages, persistent light/dark themes, a custom logo loading screen, a SQLite project catalogue, and a password-protected project dashboard.
+A bilingual Arabic/English graphic design portfolio with separate pages, persistent light/dark themes, an AKRAM DESIGN loading screen, a SQLite project catalogue, and a password-protected project dashboard.
 
 The store has its own public product catalogue and item pages. From the dashboard, manage Arabic and English names and descriptions, images, SKU, price, optional sale price, currency, stock, and publishing status.
 
@@ -69,4 +69,6 @@ The shop currently supports product discovery and email enquiries. It does not p
 - Run the built-in checks after a code change: `python -m unittest discover -s tests -v`.
 - Keep the `instance` directory private and include the SQLite database in your backup plan. Do not commit `.env`, secrets, or production database files.
 
-The images and sample project copy are placeholders; replace them with the designer's own licensed content before launch.
+The homepage portrait uses `studio/static/images/akram-profile.jpg.jpg` (JPEG, 809 × 1080). The site logo uses `studio/static/images/akram-logo.png.png` (PNG, 1254 × 1254) in the header, loading screen, footer, admin sign-in, and favicon. Keep these exact filenames or update the corresponding references in the templates. The old abstract portrait and NOOR mark files are retained but are no longer referenced by the site.
+
+The three existing portfolio projects use the local images in `studio/static/images/portfolio/` in their current display order: `design-01.jpg.jpeg` for Sunday Studio, `design-02.jpg.jpeg` for Forma Objects, and `design-03.jpg.jpeg` for Serein Living. Their project records and other fields are preserved. Project images may use one of these local paths or an HTTPS URL in the dashboard. Contact links use the official email and WhatsApp details in the contact page, homepage, footer, and product enquiry button.

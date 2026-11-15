@@ -18,7 +18,7 @@ from flask import (
     url_for,
 )
 
-from .database import get_db
+from .database import PROJECT_IMAGE_URLS, get_db
 from .security import (
     admin_required,
     csrf_token,
@@ -63,23 +63,23 @@ MAX_STOCK = 1_000_000
 
 def render_page(template, **context):
     titles = {
-        "home": ("NOOR — مصممة جرافيك ومديرة فنية", "NOOR — Graphic Designer & Art Director"),
-        "work": ("الأعمال — NOOR", "Selected Work — NOOR"),
-        "about": ("من أنا — NOOR", "About — NOOR"),
-        "services": ("الخدمات — NOOR", "Services — NOOR"),
-        "contact": ("تواصل — NOOR", "Contact — NOOR"),
-        "admin": ("إدارة الأعمال — NOOR", "Portfolio Management — NOOR"),
-        "dashboard": ("لوحة التحكم — NOOR", "Studio Dashboard — NOOR"),
-        "shop": ("المتجر — NOOR", "Shop — NOOR"),
-        "settings": ("إعدادات الحساب — NOOR", "Account Settings — NOOR"),
+        "home": ("AKRAM DESIGN — مصمم جرافيك", "AKRAM DESIGN — Graphic Designer"),
+        "work": ("الأعمال — AKRAM DESIGN", "Selected Work — AKRAM DESIGN"),
+        "about": ("من أنا — AKRAM DESIGN", "About — AKRAM DESIGN"),
+        "services": ("الخدمات — AKRAM DESIGN", "Services — AKRAM DESIGN"),
+        "contact": ("تواصل — AKRAM DESIGN", "Contact — AKRAM DESIGN"),
+        "admin": ("إدارة الأعمال — AKRAM DESIGN", "Portfolio Management — AKRAM DESIGN"),
+        "dashboard": ("لوحة التحكم — AKRAM DESIGN", "Dashboard — AKRAM DESIGN"),
+        "shop": ("المتجر — AKRAM DESIGN", "Shop — AKRAM DESIGN"),
+        "settings": ("إعدادات الحساب — AKRAM DESIGN", "Account Settings — AKRAM DESIGN"),
     }
     title_ar, title_en = titles.get(
-        context.get("page"), ("NOOR — معرض أعمال إبداعي", "NOOR — Creative Portfolio")
+        context.get("page"), ("AKRAM DESIGN — معرض أعمال إبداعي", "AKRAM DESIGN — Creative Portfolio")
     )
     project = context.get("project")
     if project:
-        title_ar = f"{project['title_ar']} — NOOR"
-        title_en = f"{project['title_en']} — NOOR"
+        title_ar = f"{project['title_ar']} — AKRAM DESIGN"
+        title_en = f"{project['title_en']} — AKRAM DESIGN"
     context.setdefault("title_ar", title_ar)
     context.setdefault("title_en", title_en)
     return render_template(template, csrf_token=csrf_token, format_price=format_price, **context)
@@ -110,7 +110,7 @@ def safe_project_form():
         )
     try:
         image = urlsplit(values["image_url"])
-        valid_image_url = (
+        valid_image_url = values["image_url"] in PROJECT_IMAGE_URLS.values() or (
             image.scheme == "https"
             and bool(image.hostname)
             and image.username is None
@@ -121,8 +121,8 @@ def safe_project_form():
         valid_image_url = False
     if not valid_image_url:
         return values, (
-            "رابط الصورة يجب أن يكون HTTPS صالحاً.",
-            "The image URL must be a valid HTTPS URL.",
+            "استخدم رابط HTTPS صالحاً أو مساراً محلياً مدعوماً لصورة المشروع.",
+            "Use a valid HTTPS URL or a supported local portfolio image path.",
         )
     return values, None
 
@@ -217,7 +217,9 @@ def home():
 
 @site.get("/work")
 def work():
-    projects = get_db().execute("SELECT * FROM projects ORDER BY id DESC").fetchall()
+    projects = get_db().execute(
+        "SELECT * FROM projects ORDER BY id DESC"
+    ).fetchall()
     return render_page("work.html", projects=projects, page="work")
 
 

@@ -5,7 +5,7 @@
   <p class="eyebrow" data-ar="{{ project['category_ar'] }}" data-en="{{ project['category_en'] }}">{{ project['category_ar'] }}</p>
   <h1 data-ar="{{ project['title_ar'] }}" data-en="{{ project['title_en'] }}">{{ project['title_ar'] }}</h1>
   <p class="project-description" data-ar="{{ project['description_ar'] }}" data-en="{{ project['description_en'] }}">{{ project['description_ar'] }}</p>
-  <img class="project-cover" src="{{ project['image_url'] }}" alt="{{ project['title_ar'] }}">
+  <img class="project-cover {{ 'portfolio-artwork' if project['image_url'].startswith('/static/images/portfolio/') else '' }}" src="{{ project['image_url'] }}" alt="{{ project['title_ar'] }}">
   <div class="project-detail-bottom">
     <span data-ar="الهوية · الفكرة · التفاصيل" data-en="Identity · Concept · Details">الهوية · الفكرة · التفاصيل</span>
     <a class="underlined-link" href="{{ url_for('site.contact') }}" data-ar="ابدأ مشروعاً مشابهاً ↙" data-en="Start a similar project ↙">ابدأ مشروعاً مشابهاً ↙</a>

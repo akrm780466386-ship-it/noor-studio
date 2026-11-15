@@ -5,9 +5,13 @@
   const themeIcon = document.getElementById("themeIcon");
   const loader = document.getElementById("loader");
 
-  const readPreference = (key, fallback) => {
+  const readPreference = (key, fallback, legacyKey) => {
     try {
-      return localStorage.getItem(key) || fallback;
+      return (
+        localStorage.getItem(key) ||
+        (legacyKey && localStorage.getItem(legacyKey)) ||
+        fallback
+      );
     } catch (error) {
       console.warn("Could not read a saved site preference.", error);
       return fallback;
@@ -53,7 +57,7 @@
     document.querySelectorAll("form[data-confirm-ar]").forEach((form) => {
       form.dataset.confirm = form.dataset[english ? "confirmEn" : "confirmAr"];
     });
-    savePreference("noor-language", language);
+    savePreference("akram-language", language);
   }
 
   function setTheme(theme) {
@@ -61,7 +65,7 @@
     root.dataset.theme = theme;
     if (themeIcon) themeIcon.textContent = light ? "☾" : "☼";
     updateThemeLabel();
-    savePreference("noor-theme", theme);
+    savePreference("akram-theme", theme);
   }
 
   if (languageButton) {
@@ -81,8 +85,8 @@
     });
   });
 
-  setLanguage(readPreference("noor-language", "ar"));
-  setTheme(readPreference("noor-theme", "dark"));
+  setLanguage(readPreference("akram-language", "ar", "noor-language"));
+  setTheme(readPreference("akram-theme", "dark", "noor-theme"));
 
   if (loader) {
     root.classList.add("is-loading");

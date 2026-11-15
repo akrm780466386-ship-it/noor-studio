@@ -3,6 +3,12 @@ from pathlib import Path
 
 from flask import current_app, g
 
+PROJECT_IMAGE_URLS = {
+    "sunday-studio": "/static/images/portfolio/design-01.jpg.jpeg",
+    "forma-objects": "/static/images/portfolio/design-02.jpg.jpeg",
+    "serein-living": "/static/images/portfolio/design-03.jpg.jpeg",
+}
+
 PROJECTS = (
     (
         "serein-living",
@@ -12,7 +18,7 @@ PROJECTS = (
         "Visual identity · Lifestyle",
         "هوية هادئة لمساحة تحتفي بالتفاصيل اليومية.",
         "A calm identity for a space that celebrates everyday details.",
-        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85",
+        PROJECT_IMAGE_URLS["serein-living"],
     ),
     (
         "forma-objects",
@@ -22,7 +28,7 @@ PROJECTS = (
         "Packaging · Art & fragrance",
         "نظام تغليف يلتقي فيه الفن المعاصر بعالم العطور.",
         "A packaging system where contemporary art meets fragrance.",
-        "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc?auto=format&fit=crop&w=1200&q=85",
+        PROJECT_IMAGE_URLS["forma-objects"],
     ),
     (
         "sunday-studio",
@@ -32,7 +38,7 @@ PROJECTS = (
         "Creative campaign · Culture",
         "حملة مرحة تحتفي بالألوان والإبداع.",
         "A playful campaign celebrating color and creativity.",
-        "https://images.unsplash.com/photo-1549490349-8643362247b5?auto=format&fit=crop&w=1200&q=85",
+        PROJECT_IMAGE_URLS["sunday-studio"],
     ),
 )
 

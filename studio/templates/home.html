@@ -2,20 +2,20 @@
 {% block content %}
 <section class="wrap hero">
   <div class="hero-copy">
-    <p class="eyebrow" data-ar="مصممة جرافيك · مديرة فنية" data-en="Graphic designer · Art director">مصممة جرافيك · مديرة فنية</p>
+    <p class="eyebrow" data-ar="مصمم جرافيك مستقل" data-en="Independent graphic designer">مصمم جرافيك مستقل</p>
     <h1><span data-ar="أصنع أفكاراً" data-en="I make ideas">أصنع أفكاراً</span><br><span data-ar="تترك أثراً." data-en="that leave a mark.">تترك أثراً.</span></h1>
     <p class="hero-description" data-ar="أحوّل الأفكار الجريئة إلى هويات بصرية وتجارب رقمية تعبّر عن العلامات التجارية بوضوح وشخصية لا تُنسى." data-en="I turn bold ideas into visual identities and digital experiences that give brands clarity, character, and a lasting impression.">أحوّل الأفكار الجريئة إلى هويات بصرية وتجارب رقمية تعبّر عن العلامات التجارية بوضوح وشخصية لا تُنسى.</p>
     <div class="hero-actions">
       <a class="button-primary" href="{{ url_for('site.work') }}"><span data-ar="استكشف أعمالي" data-en="Explore my work">استكشف أعمالي</span><span aria-hidden="true">↙</span></a>
       <a class="underlined-link" href="{{ url_for('site.about') }}" data-ar="تعرف عليّ" data-en="Get to know me">تعرف عليّ</a>
     </div>
-    <p class="availability"><span class="status-dot"></span><span data-ar="متاحة لمشاريع مختارة · ٢٠٢٦" data-en="Available for select projects · 2026">متاحة لمشاريع مختارة · ٢٠٢٦</span></p>
+    <p class="availability"><span class="status-dot"></span><span data-ar="هوية بصرية · تصميم · عمل إبداعي" data-en="Visual identity · Design · Creative work">هوية بصرية · تصميم · عمل إبداعي</span></p>
   </div>
   <div class="hero-visual">
-    <img class="hero-photo" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=1100&q=85" alt="صورة إبداعية لمصممة" fetchpriority="high">
+    <img class="hero-photo" src="{{ url_for('static', filename='images/akram-profile.jpg.jpg') }}" alt="Akram" fetchpriority="high">
     <span class="hero-outline"></span>
     <span class="vertical-label">CREATIVE PRACTICE — 01</span>
-    <span class="image-stamp" data-ar="تصميم بفكرة، وشعور." data-en="Design with thought & feeling.">تصميم بفكرة، وشعور.</span>
+    <span class="image-stamp" data-ar="مساحة الصورة الشخصية" data-en="Portrait image slot">مساحة الصورة الشخصية</span>
   </div>
 </section>
 
@@ -37,7 +37,18 @@
 </section>
 
 <section class="wrap contact-banner">
-  <div><p class="eyebrow" data-ar="لديك فكرة؟" data-en="Have an idea?">لديك فكرة؟</p><h2 data-ar="لنصنع شيئاً جميلاً معاً." data-en="Let's make something beautiful together.">لنصنع شيئاً جميلاً معاً.</h2></div>
-  <a class="button-primary" href="{{ url_for('site.contact') }}"><span data-ar="ابدأ مشروعك" data-en="Start a project">ابدأ مشروعك</span><span aria-hidden="true">↙</span></a>
+  <div class="contact-banner-copy"><p class="eyebrow" data-ar="لديك فكرة؟" data-en="Have an idea?">لديك فكرة؟</p><h2 data-ar="لنصنع شيئاً جميلاً معاً." data-en="Let's make something beautiful together.">لنصنع شيئاً جميلاً معاً.</h2></div>
+  <div class="contact-banner-actions">
+    <a class="button-primary contact-banner-link" href="mailto:akrm780466386@gmail.com">
+      <span data-ar="البريد الإلكتروني" data-en="Email">البريد الإلكتروني</span>
+      <b dir="ltr">akrm780466386@gmail.com</b>
+      <span aria-hidden="true">↙</span>
+    </a>
+    <a class="contact-banner-link contact-banner-link-secondary" href="https://wa.me/967780466386" target="_blank" rel="noopener noreferrer">
+      <span data-ar="واتساب" data-en="WhatsApp">واتساب</span>
+      <b dir="ltr">+967 780 466 386</b>
+      <span aria-hidden="true">↗</span>
+    </a>
+  </div>
 </section>
 {% endblock %}

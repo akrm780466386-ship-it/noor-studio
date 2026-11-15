@@ -51,8 +51,8 @@ def create_app():
             "error.html",
             code=404,
             page="",
-            title_ar="الصفحة غير موجودة — NOOR",
-            title_en="Page not found — NOOR",
+            title_ar="الصفحة غير موجودة — AKRAM DESIGN",
+            title_en="Page not found — AKRAM DESIGN",
         ), 404
 
     @app.errorhandler(413)
@@ -63,8 +63,8 @@ def create_app():
             "error.html",
             code=413,
             page="",
-            title_ar="الطلب كبير جداً — NOOR",
-            title_en="Request too large — NOOR",
+            title_ar="الطلب كبير جداً — AKRAM DESIGN",
+            title_en="Request too large — AKRAM DESIGN",
         ), 413
 
     @app.after_request

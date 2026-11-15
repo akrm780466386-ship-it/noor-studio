@@ -12,7 +12,7 @@
       <label><span data-ar="الرابط المختصر (بالإنجليزية)" data-en="URL slug (English)">الرابط المختصر (بالإنجليزية)</span><input name="slug" value="{{ project['slug'] or '' }}" placeholder="my-project" pattern="[a-z0-9]+(-[a-z0-9]+)*" required maxlength="80"></label>
       <label><span data-ar="التصنيف — عربي" data-en="Category — Arabic">التصنيف — عربي</span><input name="category_ar" value="{{ project['category_ar'] or '' }}" required maxlength="300"></label>
       <label><span data-ar="التصنيف — إنجليزي" data-en="Category — English">التصنيف — إنجليزي</span><input name="category_en" value="{{ project['category_en'] or '' }}" required maxlength="300"></label>
-      <label class="full-span"><span data-ar="رابط صورة المشروع (HTTPS)" data-en="Project image URL (HTTPS)">رابط صورة المشروع (HTTPS)</span><input name="image_url" type="url" value="{{ project['image_url'] or '' }}" placeholder="https://images.unsplash.com/..." required maxlength="300"></label>
+      <label class="full-span"><span data-ar="مسار أو رابط صورة المشروع" data-en="Project image path or URL">مسار أو رابط صورة المشروع</span><input name="image_url" type="text" value="{{ project['image_url'] or '' }}" placeholder="/static/images/portfolio/design-01.jpg.jpeg" required maxlength="300"></label>
       <label class="full-span"><span data-ar="نبذة — عربي" data-en="Description — Arabic">نبذة — عربي</span><textarea name="description_ar" required maxlength="2000" rows="4">{{ project['description_ar'] or '' }}</textarea></label>
       <label class="full-span"><span data-ar="نبذة — إنجليزي" data-en="Description — English">نبذة — إنجليزي</span><textarea name="description_en" required maxlength="2000" rows="4">{{ project['description_en'] or '' }}</textarea></label>
     </div>
