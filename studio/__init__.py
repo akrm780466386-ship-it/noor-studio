@@ -6,7 +6,7 @@ from pathlib import Path
 from flask import Flask, request
 from dotenv import load_dotenv
 
-from .database import init_app as init_database
+from .database import init_app as init_database, get_db
 from .routes import site
 
 
