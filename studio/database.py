@@ -184,11 +184,28 @@ def _import_legacy_sqlite(database):
             columns = [column for column in legacy_columns if column in destination_columns]
             if not columns:
                 continue
+
+            # Let PostgreSQL assign fresh identity values. The imported records
+            # have no dependent foreign keys, and this avoids collisions with
+            # rows seeded in the destination before the legacy file is found.
+            if table in ("projects", "products") and "id" in columns:
+                columns.remove("id")
+
             placeholders = ", ".join("?" for _ in columns)
             column_sql = ", ".join(columns)
+            if table in ("projects", "products") and "slug" in columns:
+                updates = [column for column in columns if column != "slug"]
+                conflict_sql = (
+                    "ON CONFLICT (slug) DO UPDATE SET "
+                    + ", ".join(f"{column} = EXCLUDED.{column}" for column in updates)
+                    if updates
+                    else "ON CONFLICT (slug) DO NOTHING"
+                )
+            else:
+                conflict_sql = "ON CONFLICT DO NOTHING"
             insert_sql = (
                 f"INSERT INTO {table} ({column_sql}) VALUES ({placeholders}) "
-                "ON CONFLICT DO NOTHING"
+                f"{conflict_sql}"
             )
             for row in legacy.execute(f"SELECT {column_sql} FROM {table}"):
                 database.execute(insert_sql, tuple(row[column] for column in columns))
