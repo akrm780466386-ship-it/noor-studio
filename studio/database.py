@@ -123,6 +123,7 @@ def get_db():
             connection = psycopg.connect(
                 database_url,
                 connect_timeout=10,
+                sslmode="require",
                 prepare_threshold=None,
             )
             g.db = PostgresConnection(connection)
