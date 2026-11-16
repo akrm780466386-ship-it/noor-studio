@@ -1,6 +1,5 @@
 import hmac
 import re
-import sqlite3
 import time
 import secrets
 from urllib.parse import urlsplit
@@ -18,7 +17,7 @@ from flask import (
     url_for,
 )
 
-from .database import PROJECT_IMAGE_URLS, get_db
+from .database import INTEGRITY_ERRORS, PROJECT_IMAGE_URLS, get_db
 from .security import (
     admin_required,
     csrf_token,
@@ -473,7 +472,7 @@ def admin_new_product():
                 ),
             )
             get_db().commit()
-        except sqlite3.IntegrityError:
+        except INTEGRITY_ERRORS:
             flash_local(
                 "رابط المنتج أو رمز SKU مستخدم مسبقاً.",
                 "That product URL or SKU is already in use.",
@@ -520,7 +519,7 @@ def admin_edit_product(product_id):
                 ),
             )
             database.commit()
-        except sqlite3.IntegrityError:
+        except INTEGRITY_ERRORS:
             flash_local(
                 "رابط المنتج أو رمز SKU مستخدم مسبقاً.",
                 "That product URL or SKU is already in use.",
@@ -565,7 +564,7 @@ def admin_new_project():
                 tuple(values[field] for field in PROJECT_FIELDS),
             )
             get_db().commit()
-        except sqlite3.IntegrityError:
+        except INTEGRITY_ERRORS:
             flash_local(
                 "هذا الرابط مستخدم بالفعل. اختر رابطاً آخر.",
                 "That URL is already in use. Choose another.",
@@ -607,7 +606,7 @@ def admin_edit_project(project_id):
                 tuple(values[field] for field in PROJECT_FIELDS) + (project_id,),
             )
             database.commit()
-        except sqlite3.IntegrityError:
+        except INTEGRITY_ERRORS:
             flash_local(
                 "هذا الرابط مستخدم بالفعل. اختر رابطاً آخر.",
                 "That URL is already in use. Choose another.",

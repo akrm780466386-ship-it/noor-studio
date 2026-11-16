@@ -6,7 +6,7 @@ from pathlib import Path
 from flask import Flask, request
 from dotenv import load_dotenv
 
-from .database import init_app as init_database
+from .database import get_db, init_app as init_database
 from .routes import site
 
 
@@ -26,6 +26,11 @@ def create_app():
         DATABASE=os.environ.get(
             "DATABASE_PATH", str(Path(app.instance_path) / "noor.sqlite3")
         ),
+        DATABASE_URL=os.environ.get("DATABASE_URL", "").strip(),
+        LEGACY_DATABASE_PATH=os.environ.get(
+            "LEGACY_DATABASE_PATH",
+            os.environ.get("DATABASE_PATH", str(Path(app.instance_path) / "noor.sqlite3")),
+        ),
         MAX_CONTENT_LENGTH=16 * 1024,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Strict",
@@ -35,6 +40,26 @@ def create_app():
     )
 
     init_database(app)
+    bootstrap_username = os.environ.get("ADMIN_BOOTSTRAP_USERNAME", "").strip().lower()
+    bootstrap_password = os.environ.get("ADMIN_BOOTSTRAP_PASSWORD", "")
+    if bootstrap_username and bootstrap_password:
+        import re
+        if not re.fullmatch(r"[a-zA-Z0-9._-]{3,80}", bootstrap_username):
+            raise RuntimeError("ADMIN_BOOTSTRAP_USERNAME is invalid.")
+        if len(bootstrap_password) < 14 or len(bootstrap_password) > 1024:
+            raise RuntimeError("ADMIN_BOOTSTRAP_PASSWORD must contain 14-1024 characters.")
+        with app.app_context():
+            existing_admin = get_db().execute(
+                "SELECT username FROM admin_users WHERE active = 1 LIMIT 1"
+            ).fetchone()
+            if existing_admin is None:
+                from .security import hash_password
+                salt = secrets.token_bytes(16)
+                get_db().execute(
+                    "INSERT INTO admin_users (username, password_hash, password_salt) VALUES (?, ?, ?)",
+                    (bootstrap_username, hash_password(bootstrap_password, salt), salt),
+                )
+                get_db().commit()
     app.register_blueprint(site)
 
     @app.context_processor
