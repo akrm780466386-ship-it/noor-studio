@@ -151,6 +151,10 @@ def _import_legacy_sqlite(database):
 
     legacy_path = Path(current_app.config["LEGACY_DATABASE_PATH"])
     if not legacy_path.is_file():
+        current_app.logger.warning(
+            "Legacy SQLite import skipped: database file was not found at %s.",
+            legacy_path,
+        )
         return
 
     allowed_tables = (
@@ -163,6 +167,24 @@ def _import_legacy_sqlite(database):
     legacy = sqlite3.connect(f"file:{legacy_path}?mode=ro", uri=True)
     legacy.row_factory = sqlite3.Row
     try:
+        integrity = legacy.execute("PRAGMA quick_check").fetchone()
+        if integrity is None or integrity[0] != "ok":
+            raise RuntimeError("The legacy SQLite database failed its integrity check.")
+
+        existing_tables = {
+            row[0]
+            for row in legacy.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            ).fetchall()
+        }
+        required_tables = {"projects", "admin_users", "site_meta"}
+        missing_tables = required_tables - existing_tables
+        if missing_tables:
+            raise RuntimeError(
+                "The legacy SQLite database is missing required tables: "
+                + ", ".join(sorted(missing_tables))
+            )
+
         for table in allowed_tables:
             exists = legacy.execute(
                 "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
