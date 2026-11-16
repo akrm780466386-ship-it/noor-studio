@@ -1,7 +1,15 @@
+import os
 import sqlite3
 from pathlib import Path
 
 from flask import current_app, g
+
+try:
+    import psycopg
+    INTEGRITY_ERRORS = (sqlite3.IntegrityError, psycopg.IntegrityError)
+except ImportError:
+    psycopg = None
+    INTEGRITY_ERRORS = (sqlite3.IntegrityError,)
 
 PROJECT_IMAGE_URLS = {
     "sunday-studio": "/static/images/portfolio/design-01.jpg.jpeg",
@@ -11,31 +19,22 @@ PROJECT_IMAGE_URLS = {
 
 PROJECTS = (
     (
-        "serein-living",
-        "Serein Living",
-        "Serein Living",
-        "هوية بصرية · أسلوب حياة",
-        "Visual identity · Lifestyle",
+        "serein-living", "Serein Living", "Serein Living",
+        "هوية بصرية · أسلوب حياة", "Visual identity · Lifestyle",
         "هوية هادئة لمساحة تحتفي بالتفاصيل اليومية.",
         "A calm identity for a space that celebrates everyday details.",
         PROJECT_IMAGE_URLS["serein-living"],
     ),
     (
-        "forma-objects",
-        "Forma Objects",
-        "Forma Objects",
-        "تغليف · فن وعطور",
-        "Packaging · Art & fragrance",
+        "forma-objects", "Forma Objects", "Forma Objects",
+        "تغليف · فن وعطور", "Packaging · Art & fragrance",
         "نظام تغليف يلتقي فيه الفن المعاصر بعالم العطور.",
         "A packaging system where contemporary art meets fragrance.",
         PROJECT_IMAGE_URLS["forma-objects"],
     ),
     (
-        "sunday-studio",
-        "Sunday Studio",
-        "Sunday Studio",
-        "حملة إبداعية · ثقافة",
-        "Creative campaign · Culture",
+        "sunday-studio", "Sunday Studio", "Sunday Studio",
+        "حملة إبداعية · ثقافة", "Creative campaign · Culture",
         "حملة مرحة تحتفي بالألوان والإبداع.",
         "A playful campaign celebrating color and creativity.",
         PROJECT_IMAGE_URLS["sunday-studio"],
@@ -43,12 +42,95 @@ PROJECTS = (
 )
 
 
+class HybridRow:
+    """A database row supporting both SQLite-style integer and named indexing."""
+
+    def __init__(self, names, values):
+        self._names = tuple(names)
+        self._values = tuple(values)
+        self._mapping = dict(zip(self._names, self._values))
+
+    def __getitem__(self, key):
+        if isinstance(key, str):
+            return self._mapping[key]
+        return self._values[key]
+
+    def __iter__(self):
+        return iter(self._values)
+
+    def __len__(self):
+        return len(self._values)
+
+    def keys(self):
+        return self._names
+
+
+class HybridCursor:
+    def __init__(self, cursor):
+        self._cursor = cursor
+
+    def _convert(self, row):
+        if row is None:
+            return None
+        names = [
+            column.name if hasattr(column, "name") else column[0]
+            for column in self._cursor.description
+        ]
+        return HybridRow(names, row)
+
+    def fetchone(self):
+        return self._convert(self._cursor.fetchone())
+
+    def fetchall(self):
+        return [self._convert(row) for row in self._cursor.fetchall()]
+
+    @property
+    def rowcount(self):
+        return self._cursor.rowcount
+
+
+class PostgresConnection:
+    """Small compatibility layer for the existing parameterized SQLite queries."""
+
+    def __init__(self, connection):
+        self._connection = connection
+
+    def execute(self, query, parameters=()):
+        cursor = self._connection.execute(query.replace("?", "%s"), parameters)
+        return HybridCursor(cursor)
+
+    def executemany(self, query, parameters):
+        cursor = self._connection.cursor()
+        cursor.executemany(query.replace("?", "%s"), parameters)
+        return HybridCursor(cursor)
+
+    def commit(self):
+        self._connection.commit()
+
+    def rollback(self):
+        self._connection.rollback()
+
+    def close(self):
+        self._connection.close()
+
+
 def get_db():
     if "db" not in g:
-        g.db = sqlite3.connect(current_app.config["DATABASE"])
-        g.db.row_factory = sqlite3.Row
-        g.db.execute("PRAGMA foreign_keys = ON")
-        g.db.execute("PRAGMA busy_timeout = 5000")
+        database_url = current_app.config.get("DATABASE_URL")
+        if database_url:
+            if psycopg is None:
+                raise RuntimeError("Install psycopg to use DATABASE_URL.")
+            connection = psycopg.connect(
+                database_url,
+                connect_timeout=10,
+                prepare_threshold=None,
+            )
+            g.db = PostgresConnection(connection)
+        else:
+            g.db = sqlite3.connect(current_app.config["DATABASE"])
+            g.db.row_factory = sqlite3.Row
+            g.db.execute("PRAGMA foreign_keys = ON")
+            g.db.execute("PRAGMA busy_timeout = 5000")
     return g.db
 
 
@@ -58,8 +140,100 @@ def close_db(_error=None):
         database.close()
 
 
+def _import_legacy_sqlite(database):
+    marker = database.execute(
+        "SELECT value FROM site_meta WHERE key = ?",
+        ("legacy_sqlite_imported",),
+    ).fetchone()
+    if marker is not None:
+        return
+
+    legacy_path = Path(current_app.config["LEGACY_DATABASE_PATH"])
+    if not legacy_path.is_file():
+        return
+
+    allowed_tables = (
+        "projects",
+        "admin_users",
+        "login_attempts",
+        "site_meta",
+        "products",
+    )
+    legacy = sqlite3.connect(f"file:{legacy_path}?mode=ro", uri=True)
+    legacy.row_factory = sqlite3.Row
+    try:
+        for table in allowed_tables:
+            exists = legacy.execute(
+                "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+                (table,),
+            ).fetchone()
+            if exists is None:
+                continue
+            columns = [
+                row["name"] for row in legacy.execute(f"PRAGMA table_info({table})")
+            ]
+            if not columns:
+                continue
+            placeholders = ", ".join("?" for _ in columns)
+            column_sql = ", ".join(columns)
+            insert_sql = (
+                f"INSERT INTO {table} ({column_sql}) VALUES ({placeholders}) "
+                "ON CONFLICT DO NOTHING"
+            )
+            for row in legacy.execute(f"SELECT {column_sql} FROM {table}"):
+                database.execute(insert_sql, tuple(row[column] for column in columns))
+
+        database.execute(
+            "INSERT INTO site_meta (key, value) VALUES (?, ?) ON CONFLICT DO NOTHING",
+            ("legacy_sqlite_imported", "1"),
+        )
+        for table in ("projects", "products"):
+            maximum = database.execute(
+                f"SELECT MAX(id) FROM {table}"
+            ).fetchone()[0]
+            if maximum is not None:
+                database.execute(
+                    "SELECT setval(pg_get_serial_sequence(?, 'id'), ?, true)",
+                    (f"public.{table}", maximum),
+                )
+        database.commit()
+    except Exception:
+        database.rollback()
+        raise
+    finally:
+        legacy.close()
+
+
+def _seed_postgres(database):
+    seeded = database.execute(
+        "SELECT value FROM site_meta WHERE key = ?",
+        ("sample_projects_seeded",),
+    ).fetchone()
+    if seeded is None:
+        count = database.execute("SELECT COUNT(*) FROM projects").fetchone()[0]
+        if count == 0:
+            database.executemany(
+                """INSERT INTO projects (
+                    slug, title_ar, title_en, category_ar, category_en,
+                    description_ar, description_en, image_url
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT (slug) DO NOTHING""",
+                PROJECTS,
+            )
+        database.execute(
+            "INSERT INTO site_meta (key, value) VALUES (?, ?) ON CONFLICT DO NOTHING",
+            ("sample_projects_seeded", "1"),
+        )
+    database.commit()
+
+
 def init_db():
     database = get_db()
+    if current_app.config.get("DATABASE_URL"):
+        _import_legacy_sqlite(database)
+        _seed_postgres(database)
+        return
+
     database.executescript(
         """
         CREATE TABLE IF NOT EXISTS projects (
@@ -144,8 +318,9 @@ def init_db():
 
 
 def init_app(app):
-    database_path = Path(app.config["DATABASE"])
-    database_path.parent.mkdir(parents=True, exist_ok=True)
     app.teardown_appcontext(close_db)
+    if not app.config.get("DATABASE_URL"):
+        database_path = Path(app.config["DATABASE"])
+        database_path.parent.mkdir(parents=True, exist_ok=True)
     with app.app_context():
         init_db()
