@@ -170,9 +170,18 @@ def _import_legacy_sqlite(database):
             ).fetchone()
             if exists is None:
                 continue
-            columns = [
+            legacy_columns = [
                 row["name"] for row in legacy.execute(f"PRAGMA table_info({table})")
             ]
+            destination_columns = {
+                row[0]
+                for row in database.execute(
+                    "SELECT column_name FROM information_schema.columns "
+                    "WHERE table_schema = 'public' AND table_name = ?",
+                    (table,),
+                ).fetchall()
+            }
+            columns = [column for column in legacy_columns if column in destination_columns]
             if not columns:
                 continue
             placeholders = ", ".join("?" for _ in columns)
