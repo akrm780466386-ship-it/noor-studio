@@ -3,6 +3,7 @@ name: Supabase migration branch checks
 on:
   push:
     branches:
+      - main
       - feature/supabase-postgres
   pull_request:
     branches:
